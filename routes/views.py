@@ -25,6 +25,7 @@ def dfs_paths(graph, start, goal):
                 else:
                     stack.append((next_, path + [next_]))
 
+
 def get_graph():
     qs = Train.objects.values('from_city')
     from_city_set = set(i['from_city'] for i in qs)
@@ -43,7 +44,7 @@ def find_routes(request):
             data = form.cleaned_data
             from_city = data['from_city']
             to_city = data['to_city']
-            cities_form = data['trains']
+            cities = data['cities']
             travelling_time = data['travelling_time']
             graph = get_graph()
             all_ways = list(dfs_paths(graph, from_city.id, to_city.id))
@@ -51,9 +52,9 @@ def find_routes(request):
                 # нет ни одного маршрута для данного поиска
                 messages.error(request, 'Маршрута, удовлетворяющего условиям не  существует.')
                 return render(request, 'routes/home.html', {'form': form})
-            if cities_form:
+            if cities:
                 # если есть города, через которые нужно проехать
-                across_cities = [city.id for city in cities_form]
+                across_cities = [city.id for city in cities]
                 right_ways = []
                 for way in all_ways:
                     # тогда отбираем те маршруты, которые проходят через них
@@ -65,7 +66,7 @@ def find_routes(request):
                 return render(request, 'routes/home.html', {'form': form})
             else:
                 right_ways = all_ways
-                return render(request, 'routes/home.html', {'form': form})
+        return render(request, 'routes/home.html', {'form': form})
     else:
         messages.error(request, 'Создайте маршрут')
     form = RouteForm()
