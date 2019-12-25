@@ -3,7 +3,7 @@
 {% block content %}
 <h1 class="display-4 text-center my-4">Поезда</h1>
 <div class="row ">
-<div class='col-md-6 mx-auto'>
+<div class='col-md-10 mx-auto'>
 <table class="table table-striped">
     <tbody>
     <thead>
@@ -17,28 +17,28 @@
         </tr>
     </thead>
         {% for object in objects_list%}
-        <tr>
-                <tr>
-                    <td>{{object.name}}</td>
-                    <td>{{object.from_city}}</td>
-                    <td>{{object.to_city}}</td>
-                    <td>{{object.travel_time}}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-<!--            <td>-->
-<!--                <a href='{% url "cities:update" pk=object.pk%}'>-->
-<!--                <button type="button" class="btn btn-primary btn-sm"> Редактировать </button>-->
-<!--                </a>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--                <a href='{% url "cities:delete" pk=object.pk%}'>-->
-<!--                <button type="button" class="btn btn-danger btn-sm"> Удалить </button>-->
-<!--                </a>-->
-<!--            </td>-->
-        </tr>
+
+            <tr>
+                <td>
+                    <a href='{% url "trains:detail" pk=object.pk%}'>
+                   {{object.name}}
+                    </a>
+                </td>
+                <td>{{object.from_city}}</td>
+                <td>{{object.to_city}}</td>
+                <td>{{object.travel_time}}</td>
+                <td>
+                    <a href='{% url "trains:update" pk=object.pk%}'>
+                    <button type="button" class="btn btn-primary btn-sm"> Редактировать </button>
+                    </a>
+                </td>
+                <td>
+                    <a href='{% url "trains:delete" pk=object.pk%}'>
+                    <button type="button" class="btn btn-danger btn-sm"> Удалить </button>
+                    </a>
+                </td>
+            </tr>
         {% endfor %}
-    </tbody>
 </table>
 </div>
 </div>
