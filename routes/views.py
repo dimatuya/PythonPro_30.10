@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView
 
 from trains.models import Train
 from .forms import *
@@ -63,7 +64,7 @@ def find_routes(request):
                 if not right_ways:
                     # когда список маршрутов пуст
                     messages.error(request, 'Маршрут, через эти города невозможен ')
-                return render(request, 'routes/home.html', {'form': form})
+                    return render(request, 'routes/home.html', {'form': form})
             else:
                 right_ways = all_ways
             trains = []
@@ -88,31 +89,31 @@ def find_routes(request):
                     # которые удовлетворяли бы заданным условиям
                     messages.error(request, 'Время в пути, больше заданного.')
                     return render(request, 'routes/home.html', {'form': form})
-                routes = []
-                cities = {'from_city': from_city.name, 'to_city': to_city.name}
-                for tr in trains:
-                    # формирую список всех маршрутов
-                    routes.append({'route': tr['trains'],
-                    'total_time': tr['total_time'],
-                    'from_city': from_city.name,
-                    'to_city': to_city.name})
-                sorted_routes = []
-                if len(routes) == 1:
-                    sorted_routes = routes
-                else:
-                    # если маршрутов больше одного, то сортирую их по времени
-                    times = list(set(x['total_time'] for x in routes))
-                    times = sorted(times)
-                    for time in times:
-                        for route in routes:
-                            if time == route['total_time']:
-                                sorted_routes.append(route)
-                context = {}
-                form = RouteForm()
-                context['form'] = form
-                context['routes'] = sorted_routes
-                context['cities'] = cities
-                return render(request, 'routes/home.html', context)
+            routes = []
+            cities = {'from_city': from_city.name, 'to_city': to_city.name}
+            for tr in trains:
+                # формирую список всех маршрутов
+                routes.append({'route': tr['trains'],
+                'total_time': tr['total_time'],
+                'from_city': from_city.name,
+                'to_city': to_city.name})
+            sorted_routes = []
+            if len(routes) == 1:
+                sorted_routes = routes
+            else:
+                # если маршрутов больше одного, то сортирую их по времени
+                times = list(set(x['total_time'] for x in routes))
+                times = sorted(times)
+                for time in times:
+                    for route in routes:
+                        if time == route['total_time']:
+                            sorted_routes.append(route)
+            context = {}
+            form = RouteForm()
+            context['form'] = form
+            context['routes'] = sorted_routes
+            context['cities'] = cities
+            return render(request, 'routes/home.html', context)
 
         return render(request, 'routes/home.html', {'form': form})
     else:
@@ -167,3 +168,15 @@ def add_route(request):
             # защита от обращения по адресу без данных
             messages.error(request, 'Невозможно сохранить несуществующий маршрут')
             return redirect('/')
+
+
+class RouteDetailView(DetailView):
+    queryset = Route.objects.all()
+    context_object_name = 'object'
+    template_name = 'routes/detail.html'
+
+
+class RouteListView(ListView):
+    queryset = Route.objects.all()
+    context_object_name = 'objects_list'
+    template_name = 'routes/list.html'

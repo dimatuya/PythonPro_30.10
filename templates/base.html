@@ -29,7 +29,7 @@
                      <a class="nav-link" href="{% url 'trains:home'%}">Поезда</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link" href="{% url 'list'%}">Маршруты</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item dropdown

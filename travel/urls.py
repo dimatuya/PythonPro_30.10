@@ -24,6 +24,8 @@ urlpatterns = [
     path('trains/', include(('trains.urls', 'trains'))),
     path('find/', find_routes, name='find_routes'),
     path('add_route/', add_route, name='add_route'),
+    path('list/', RouteListView.as_view(), name='list'),
+    path('detail/<int:pk>/', RouteDetailView.as_view(), name='detail'),
     path('accounts/', include(('accounts.urls', 'accounts'))),
     path('', home, name='home'),
 ]
